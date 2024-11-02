@@ -2,6 +2,7 @@ import { useState } from "react";
 import Authentication from "./Authentication";
 import { Button } from "@/components/ui/button";
 import Upload from "./Upload";
+import View from "./View";
 
 const AdminApp = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -13,7 +14,7 @@ const AdminApp = () => {
 
   const getScreen = (screen: string) => {
     if (screen === "upload") return <Upload />;
-    if (screen === "view") return <div>To the view panel</div>;
+    if (screen === "view") return <View />;
     if (screen === "delete") return <div>To the delete panel</div>;
     return <div>This is default view</div>;
   };
