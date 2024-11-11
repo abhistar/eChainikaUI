@@ -15,6 +15,16 @@ const View = () => {
     details: "view details",
   };
   const candidateDataList: CandidateData[] = [candidate, candidate1];
+  const [showDetail, setShowDetail] = useState(false);
+  const [targetCandidate, setTargetCandidate] = useState<CandidateData | null>(
+    null
+  );
+
+  const toggleDetail = (c: CandidateData | null) => {
+    setTargetCandidate(c);
+    setShowDetail(!showDetail);
+  };
+
   const candidateRows = () => {
     const rows: ReactNode[] = [
       <div key={"HeaderRow" as Key} className="flex flex-row bg-gray-200">
@@ -25,9 +35,6 @@ const View = () => {
     ];
     let bgGray = false;
     candidateDataList.forEach((c) => {
-      const [showDetail, setShowDetail] = useState(false);
-      const toggleDetail = () => setShowDetail(!showDetail);
-
       const row = (
         <div
           key={c.registationNumber as Key}
@@ -38,12 +45,15 @@ const View = () => {
           <div className="w-48">{c.registationNumber}</div>
           <div className="w-48">{c.name}</div>
           <div className="w-48">
-            <Button onClick={toggleDetail}>{c.details}</Button>
-            <DetailView
-              isVisible={showDetail}
-              onClose={toggleDetail}
-              candidate={c}
-            />
+            <Button
+              onClick={() => toggleDetail(c)}
+              disabled={
+                showDetail &&
+                targetCandidate?.registationNumber != c.registationNumber
+              }
+            >
+              {c.details}
+            </Button>
           </div>
         </div>
       );
@@ -52,7 +62,20 @@ const View = () => {
     });
     return rows;
   };
-  return <>{candidateRows()}</>;
+  return (
+    <>
+      <div>
+        {candidateRows()}
+        <div className="fixed top-1/2 left-1/3 z-1">
+          <DetailView
+            isVisible={showDetail}
+            onClose={() => toggleDetail(null)}
+            candidate={targetCandidate as CandidateData}
+          />
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default View;
